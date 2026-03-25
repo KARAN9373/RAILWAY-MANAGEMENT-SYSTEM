@@ -1,0 +1,188 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        font-family: 'Segoe UI', sans-serif;
+        overflow-x: hidden;
+    }
+
+    .video-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+    }
+
+    .food-container {
+        background: rgba(255, 255, 255, 0.85);
+        border-radius: 15px;
+        padding: 40px;
+        max-width: 900px;
+        margin: 60px auto;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        animation: fadeIn 1.5s ease-in-out;
+    }
+
+    h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        font-size: 2rem;
+    }
+
+    .form-section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    input[type="text"], input[type="date"] {
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        width: 100%;
+    }
+
+    .menu {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .food-item {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .food-item:hover {
+        transform: translateY(-5px);
+    }
+
+    .food-item h3 {
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+    }
+
+    .quantity-control {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 10px;
+        gap: 10px;
+    }
+
+    .quantity-control button {
+        padding: 5px 12px;
+        font-size: 1rem;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+    .quantity-control button:hover {
+        background-color: #218838;
+    }
+
+    .quantity-control input {
+        width: 40px;
+        text-align: center;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        padding: 5px;
+    }
+
+    .checkout-btn {
+        margin-top: 30px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .checkout-btn button {
+        background-color: #007bff;
+        color: white;
+        padding: 12px 30px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .checkout-btn button:hover {
+        background-color: #0056b3;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<video autoplay muted loop class="video-bg">
+    <source src="{{ url_for('static', filename='video/railway_bg.mp4') }}" type="video/mp4">
+</video>
+
+<div class="food-container">
+    <h2>Order Delicious Food Onboard</h2>
+    <form method="POST" action="{{ url_for('checkout') }}">
+        <div class="form-section">
+            <input type="text" name="passenger_name" placeholder="Passenger Name" required>
+            <input type="text" name="seat_no" placeholder="Seat Number" required>
+            <input type="text" name="train_no" placeholder="Train Number" required>
+            <input type="date" name="date_of_journey" required>
+        </div>
+
+        <div class="menu">
+            {% set food_items = [
+                {'key': 'Chicken_Biryani', 'name': 'Chicken Biryani', 'price': 180},
+                {'key': 'Samosa', 'name': 'Samosa', 'price': 30},
+                {'key': 'Veg_Sandwich', 'name': 'Veg Sandwich', 'price': 50},
+                {'key': 'Veg_Thali', 'name': 'Veg Thali', 'price': 120}
+            ] %}
+            {% for item in food_items %}
+            <div class="food-item">
+                <h3>{{ item.name }}</h3>
+                <p>₹{{ item.price }}</p>
+                <div class="quantity-control">
+                    <button type="button" onclick="decreaseQty('{{ item.key }}')">-</button>
+                    <input type="text" id="qty_{{ item.key }}" name="item_{{ item.key }}" value="0" readonly>
+                    <button type="button" onclick="increaseQty('{{ item.key }}')">+</button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="checkout-btn">
+            <button type="submit">Proceed to Checkout</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function increaseQty(item) {
+        let qtyInput = document.getElementById('qty_' + item);
+        let value = parseInt(qtyInput.value) || 0;
+        qtyInput.value = value + 1;
+    }
+
+    function decreaseQty(item) {
+        let qtyInput = document.getElementById('qty_' + item);
+        let value = parseInt(qtyInput.value) || 0;
+        if (value > 0) {
+            qtyInput.value = value - 1;
+        }
+    }
+</script>
+{% endblock %}

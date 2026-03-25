@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cancel Ticket</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Body Styles */
+        body {
+            background-color: #1b1b1b;
+            color: #fff;
+            font-family: 'Orbitron', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Holographic Background */
+        .background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: url('https://images.unsplash.com/photo-1575362359-f080bf94ad76') center center no-repeat;
+            background-size: cover;
+            filter: blur(8px);
+            z-index: -1;
+        }
+
+        /* Container for form */
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0px 10px 30px rgba(0, 255, 0, 0.4);
+            backdrop-filter: blur(10px);
+            position: relative;
+        }
+
+        .card-header h4 {
+            font-size: 2rem;
+            text-align: center;
+            color: #00FF00;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        /* Form Elements */
+        .form-control {
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid #00FF00;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            transition: 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border: 1px solid #00E600;
+            box-shadow: 0px 0px 10px #00FF00;
+        }
+
+        .btn-danger {
+            width: 100%;
+            padding: 12px;
+            background-color: #FF3030;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            color: white;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-danger:hover {
+            background-color: #d10026;
+            transform: scale(1.05);
+            box-shadow: 0 4px 20px rgba(255, 0, 0, 0.4);
+        }
+
+        /* Alert Messages */
+        .alert {
+            font-size: 1rem;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        .alert.show {
+            opacity: 1;
+        }
+
+        /* Back Button */
+        .back-button {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            color: #00FF00;
+            margin-top: 30px;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .back-button:hover {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        /* Circuit-like Animation */
+        @keyframes circuit {
+            0% {
+                width: 0;
+                opacity: 0.5;
+            }
+            50% {
+                width: 100%;
+                opacity: 0.8;
+            }
+            100% {
+                width: 0;
+                opacity: 0.5;
+            }
+        }
+
+        .circuit {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(45deg, #00FF00, #0099FF);
+            opacity: 0.5;
+            animation: circuit 3s infinite;
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Holographic Background Image -->
+    <div class="background"></div>
+
+    <!-- Container for Form -->
+    <div class="container">
+        <div class="card-header">
+            <h4>Cancel Your Ticket</h4>
+        </div>
+        <div class="card-body">
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div id="alert-container">
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <script>
+                        setTimeout(function() {
+                            document.querySelector('.alert').classList.add('show');
+                        }, 100);
+                    </script>
+                {% endif %}
+            {% endwith %}
+            
+            <!-- Ticket Cancellation Form -->
+            <form action="{{ url_for('cancel_ticket') }}" method="POST">
+                <div class="mb-3">
+                    <label for="pnr" class="form-label">Enter Your PNR:</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="pnr" 
+                        name="pnr" 
+                        placeholder="Enter your PNR number" 
+                        required>
+                </div>
+                <button type="submit" class="btn btn-danger w-100">Cancel Ticket</button>
+            </form>
+        </div>
+
+        <!-- Back Button -->
+        <a href="/" class="back-button">Back to Home</a>
+
+        <!-- Circuit Animation -->
+        <div class="circuit"></div>
+    </div>
+
+    <!-- Bootstrap JS (optional, for alerts and form interactions) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

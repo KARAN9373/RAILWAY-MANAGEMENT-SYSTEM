@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Ticket</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #111, #333);
+      color: #fff;
+    }
+
+    .container {
+      width: 80%;
+      max-width: 500px;
+      margin: 50px auto;
+      padding: 30px;
+      background: linear-gradient(45deg, #222, #444);
+      border-radius: 15px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+      text-align: center;
+      position: relative;
+      animation: slideIn 1s ease-out;
+    }
+
+    .title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 30px;
+      color: #00f4b7;
+      text-transform: uppercase;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background: #222;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      border: 2px solid #00f4b7;
+      box-shadow: 0 0 5px rgba(0, 244, 183, 0.8);
+      outline: none;
+    }
+
+    .form-group label {
+      font-size: 1rem;
+      position: absolute;
+      top: -15px;
+      left: 20px;
+      color: #00f4b7;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+
+    .button {
+      width: 100%;
+      padding: 14px 0;
+      background: #00f4b7;
+      border: none;
+      border-radius: 10px;
+      color: #111;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      text-transform: uppercase;
+      box-shadow: 0 5px 20px rgba(0, 244, 183, 0.6);
+      transition: transform 0.3s ease;
+      margin-top: 20px;
+    }
+
+    .button:hover {
+      transform: scale(1.05);
+    }
+
+    .back-button {
+      margin-top: 20px;
+      display: block;
+      text-decoration: none;
+      color: #00f4b7;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .back-button:hover {
+      text-decoration: underline;
+    }
+
+    .message {
+      margin-top: 20px;
+      padding: 10px;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      text-align: center;
+    }
+
+    .success {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .error {
+      background-color: #dc3545;
+      color: white;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      0% { transform: translateY(-100%); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 class="title">Update Your Ticket</h1>
+
+    <!-- Flash Message (Success or Error) -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="message {% if messages[0][0] == 'success' %}success{% else %}error{% endif %}">
+          {{ messages[0][1] }}
+        </div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/update-ticket">
+      <div class="form-group">
+        <label for="pnr">PNR:</label>
+        <input type="text" id="pnr" name="pnr" required placeholder="Enter your PNR">
+      </div>
+      <div class="form-group">
+        <label for="new_name">New Passenger Name:</label>
+        <input type="text" id="new_name" name="new_name" required placeholder="Enter new passenger name">
+      </div>
+      <div class="form-group">
+        <label for="new_age">New Age:</label>
+        <input type="number" id="new_age" name="new_age" required placeholder="Enter new age">
+      </div>
+      <button type="submit" class="button">Update Ticket</button>
+    </form>
+    <a href="/" class="back-button">Back to Home</a>
+  </div>
+
+  <script>
+    // Optional JS for added effects
+    const inputs = document.querySelectorAll('input');
+    inputs.forEach(input => {
+      input.addEventListener('focus', () => {
+        input.style.transform = 'scale(1.02)';
+      });
+
+      input.addEventListener('blur', () => {
+        input.style.transform = 'scale(1)';
+      });
+    });
+  </script>
+</body>
+</html>
