@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>View Food Orders</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: black;
+            color: white;
+            overflow-x: hidden;
+        }
+
+        video.bg-video {
+            position: fixed;
+            top: 0; left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+            object-fit: cover;
+            opacity: 0.25;
+        }
+
+        .container {
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            margin: 2rem auto;
+            max-width: 90%;
+            box-shadow: 0 0 20px cyan;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h2 {
+            text-align: center;
+            color: cyan;
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            animation: slideUp 0.8s ease;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        th {
+            background-color: #1a1a1a;
+            color: cyan;
+        }
+
+        tr:hover {
+            background-color: rgba(0, 255, 255, 0.1);
+            transition: 0.3s;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            margin-bottom: 5px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media screen and (max-width: 768px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+
+            th, td {
+                text-align: right;
+                padding: 0.5rem;
+            }
+
+            td::before {
+                content: attr(data-label);
+                float: left;
+                color: cyan;
+                font-weight: bold;
+            }
+
+            tr {
+                margin-bottom: 1rem;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            th {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <video autoplay muted loop class="bg-video">
+        <source src="{{ url_for('static', filename='bg.mp4') }}" type="video/mp4">
+    </video>
+
+    <div class="container">
+        <h2>All Food Orders</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Passenger Name</th>
+                    <th>Seat No</th>
+                    <th>Train No</th>
+                    <th>Journey Date</th>
+                    <th>Items Ordered</th>
+                    <th>Total (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td data-label="Name">{{ order.name }}</td>
+                    <td data-label="Seat">{{ order.seat_no }}</td>
+                    <td data-label="Train">{{ order.train_no }}</td>
+                    <td data-label="Date">{{ order.journey_date }}</td>
+                    <td data-label="Items">
+                        <ul>
+                            {% for item, qty in order.items.items() %}
+                            <li>{{ item }} × {{ qty }}</li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                    <td data-label="Total">₹{{ order.total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

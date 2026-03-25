@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        overflow-x: hidden;
+    }
+
+    .video-bg {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        min-width: 100%;
+        min-height: 100%;
+        z-index: -1;
+        object-fit: cover;
+    }
+
+    .help-form-container {
+        max-width: 600px;
+        margin: 100px auto;
+        background-color: rgba(255, 255, 255, 0.85); /* slightly transparent */
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+
+    .help-form-container h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .help-form-container input,
+    .help-form-container textarea {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .help-form-container button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .help-form-container button:hover {
+        background-color: #0056b3;
+    }
+
+    .alert {
+        margin-top: 20px;
+        padding: 15px;
+        background-color: #d9edf7;
+        color: #31708f;
+        border-radius: 8px;
+    }
+</style>
+
+<!-- 🎥 Background Video -->
+<video autoplay muted loop class="video-bg">
+    <source src="{{ url_for('static', filename='videos/train_bg.mp4') }}" type="video/mp4">
+    Your browser does not support the video tag.
+</video>
+
+<div class="help-form-container">
+    <h2>Passenger Help Request</h2>
+    <form method="POST">
+        <input type="text" name="pnr" placeholder="Enter PNR Number" required>
+        <textarea name="remark" rows="4" placeholder="Describe your issue..." required></textarea>
+        <button type="submit">Submit Request</button>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</div>
+{% endblock %}
